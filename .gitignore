@@ -1,24 +1,24 @@
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Bb]uild/
-[Bb]uilds/
-APK/
-.gradle/
-.cache/
-Assets/AssetStoreTools*
-Assets/VSCode*
-Assets/Res/LuaBytes
-Assets/_TerrainAutoUpgrade
+CatLike/[Ll]ibrary/
+CatLike/[Tt]emp/
+CatLike/[Oo]bj/
+CatLike/[Bb]uild/
+CatLike/[Bb]uilds/
+CatLike/APK/
+CatLike/.gradle/
+CatLike/.cache/
+CatLike/Assets/AssetStoreTools*
+CatLike/Assets/VSCode*
+CatLike/Assets/Res/LuaBytes
+CatLike/Assets/_TerrainAutoUpgrade
 
 # sdk directory
-Assets/GCloudSDK
-Assets/GRobot
-Assets/InstallChannel
-Assets/Midas
-Assets/Pandora
-Assets/TangramSdk
-Assets/Sdk/Msdk
+CatLike/Assets/GCloudSDK
+CatLike/Assets/GRobot
+CatLike/Assets/InstallChannel
+CatLike/Assets/Midas
+CatLike/Assets/Pandora
+CatLike/Assets/TangramSdk
+CatLike/Assets/Sdk/Msdk
 
 # IDE cache directory
 .vs/
