@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PushSphereAround : MonoBehaviour
 {
+    #region Unit2
     Vector3 startPos;
 
     [SerializeField]
@@ -43,11 +44,26 @@ public class PushSphereAround : MonoBehaviour
     float minGroundDotProduct;
 
     Vector3 contactNormal;
+    #endregion
+
+    #region Unit3
+    int stepsSinceLastGrouded;
+    #endregion
+
+    #region Unit4
+    [SerializeField]
+    Transform playerInputSpace = default;
+    #endregion
+
+    #region MyProperty
+    Renderer myRender;
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
         startPos = transform.localPosition;
         myBody = GetComponent<Rigidbody>();
+        myRender = GetComponent<Renderer>();
         OnValidate();
     }
 
@@ -65,12 +81,28 @@ public class PushSphereAround : MonoBehaviour
             return;
         }
 
-        playerInput.y = Input.GetAxis("Horizontal");
-        playerInput.x = -Input.GetAxis("Vertical");
+        playerInput.x = Input.GetAxis("Horizontal");
+        playerInput.y = Input.GetAxis("Vertical");
         // 归一化
         // playerInput.Normalize();
         playerInput = Vector2.ClampMagnitude(playerInput, 1f);
-        disiredVelocity = new Vector3(playerInput.x, 0.0f, playerInput.y) * speedRate;
+
+        // 坐标空间转换到摄像头的方向
+        if (playerInputSpace)
+        {
+            // 前后左右方向转向摄像头的本地坐标
+            Vector3 forward = playerInputSpace.forward;
+            forward.y = 0;
+            forward.Normalize();
+            Vector3 right = playerInputSpace.right;
+            right.y = 0f;
+            right.Normalize();
+            disiredVelocity = (playerInput.x * forward + playerInput.y * right) * speedRate;
+        }
+        else
+        {
+            disiredVelocity = new Vector3(playerInput.x, 0.0f, playerInput.y) * speedRate;
+        }
 
         //Vector3 newPosition = transform.localPosition + velocity * Time.deltaTime;
         //if(!allowedArea.Contains(new Vector2(newPosition.x, newPosition.z)))
@@ -81,6 +113,8 @@ public class PushSphereAround : MonoBehaviour
 
         //transform.localPosition = newPosition;
         desiredJump |= Input.GetButtonDown("Jump") & onGround;
+
+        myRender.material.SetColor("_BaseColor", onGround ? Color.black : Color.white);
     }
 
     private void ResetAll()
@@ -125,10 +159,12 @@ public class PushSphereAround : MonoBehaviour
 
     void UpdateState()
     {
+        stepsSinceLastGrouded += 1;
         velocity = myBody.velocity;
-        if (onGround)
+        if (onGround || SnapToGround())
         {
             jumpCount = 0;
+            stepsSinceLastGrouded = 0;
             if (groundContactCount > 1)
             {
                 contactNormal.Normalize();
@@ -182,5 +218,33 @@ public class PushSphereAround : MonoBehaviour
         float newZ = Mathf.MoveTowards(currentZ, disiredVelocity.z, maxSpeedChange);
 
         velocity += newXAxis * (newX - currentX) + newZAxis * (newZ - currentZ);
+    }
+
+    bool SnapToGround()
+    {
+        if (stepsSinceLastGrouded > 1)
+        {
+            return false;
+        }
+
+        if (!Physics.Raycast(myBody.position, Vector3.down, out RaycastHit hitInfo))
+        {
+            return false;
+        }
+
+        if(hitInfo.normal.y < minGroundDotProduct)
+        {
+            return false;
+        }
+
+        groundContactCount = 1;
+        contactNormal = hitInfo.normal;
+        float speed = velocity.magnitude;
+        float dot = Vector3.Dot(velocity, contactNormal);
+        if(dot > 0f)
+        {
+            velocity = (velocity - hitInfo.normal * dot).normalized * speed;
+        }
+        return true;
     }
 }

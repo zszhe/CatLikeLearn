@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\Test.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\GraphEnum.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\FrameRateCounter.cs" />
+    <Compile Include="Assets\Scripts\Move\OrbitCamera\OrbitCamera.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

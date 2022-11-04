@@ -347,6 +347,7 @@
 "Assets/Scripts/Base/Graph/GraphEnum.cs"
 "Assets/Scripts/Base/Graph/GraphFunction.cs"
 "Assets/Scripts/Base/Graph/ScrollRolling.cs"
+"Assets/Scripts/Move/OrbitCamera/OrbitCamera.cs"
 "Assets/Scripts/Move/PushSphereAround/PushSphereAround.cs"
 "Assets/Scripts/Move/SampleMove/MoveSphere.cs"
 "Assets/Scripts/ResolutionManager.cs"
