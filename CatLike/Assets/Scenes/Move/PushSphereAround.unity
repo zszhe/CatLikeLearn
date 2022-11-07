@@ -302,7 +302,7 @@ GameObject:
   - component: {fileID: 50822047}
   - component: {fileID: 50822046}
   - component: {fileID: 50822045}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -359,6 +359,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &50822047
 TrailRenderer:
   serializedVersion: 2
@@ -536,7 +542,7 @@ GameObject:
   - component: {fileID: 137555501}
   - component: {fileID: 137555500}
   - component: {fileID: 137555499}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -593,6 +599,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &137555501
 TrailRenderer:
   serializedVersion: 2
@@ -1685,7 +1697,7 @@ GameObject:
   - component: {fileID: 296999233}
   - component: {fileID: 296999232}
   - component: {fileID: 296999231}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1742,6 +1754,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &296999233
 TrailRenderer:
   serializedVersion: 2
@@ -2857,7 +2875,7 @@ GameObject:
   - component: {fileID: 484485580}
   - component: {fileID: 484485579}
   - component: {fileID: 484485578}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (15)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2914,6 +2932,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &484485580
 TrailRenderer:
   serializedVersion: 2
@@ -5905,7 +5929,7 @@ GameObject:
   - component: {fileID: 1206648525}
   - component: {fileID: 1206648524}
   - component: {fileID: 1206648523}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5962,6 +5986,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &1206648525
 TrailRenderer:
   serializedVersion: 2
@@ -6139,7 +6169,7 @@ GameObject:
   - component: {fileID: 1215681738}
   - component: {fileID: 1215681737}
   - component: {fileID: 1215681736}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6196,6 +6226,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &1215681738
 TrailRenderer:
   serializedVersion: 2
@@ -6373,7 +6409,7 @@ GameObject:
   - component: {fileID: 1286994578}
   - component: {fileID: 1286994577}
   - component: {fileID: 1286994576}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (13)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6430,6 +6466,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &1286994578
 TrailRenderer:
   serializedVersion: 2
@@ -6749,7 +6791,7 @@ GameObject:
   - component: {fileID: 1515074510}
   - component: {fileID: 1515074509}
   - component: {fileID: 1515074508}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6806,6 +6848,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &1515074510
 TrailRenderer:
   serializedVersion: 2
@@ -7079,7 +7127,7 @@ GameObject:
   - component: {fileID: 1556433308}
   - component: {fileID: 1556433307}
   - component: {fileID: 1556433306}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7136,6 +7184,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &1556433308
 TrailRenderer:
   serializedVersion: 2
@@ -13710,7 +13764,7 @@ GameObject:
   - component: {fileID: 1772612581}
   - component: {fileID: 1772612580}
   - component: {fileID: 1772612579}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13767,6 +13821,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &1772612581
 TrailRenderer:
   serializedVersion: 2
@@ -14249,7 +14309,7 @@ GameObject:
   - component: {fileID: 1804452369}
   - component: {fileID: 1804452368}
   - component: {fileID: 1804452367}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14306,6 +14366,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &1804452369
 TrailRenderer:
   serializedVersion: 2
@@ -15116,7 +15182,7 @@ GameObject:
   - component: {fileID: 1870081829}
   - component: {fileID: 1870081828}
   - component: {fileID: 1870081827}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (14)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15173,6 +15239,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &1870081829
 TrailRenderer:
   serializedVersion: 2
@@ -15911,7 +15983,7 @@ GameObject:
   - component: {fileID: 2084029500}
   - component: {fileID: 2084029499}
   - component: {fileID: 2084029498}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15968,6 +16040,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &2084029500
 TrailRenderer:
   serializedVersion: 2
@@ -16145,7 +16223,7 @@ GameObject:
   - component: {fileID: 2090102877}
   - component: {fileID: 2090102876}
   - component: {fileID: 2090102875}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16202,6 +16280,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &2090102877
 TrailRenderer:
   serializedVersion: 2
@@ -16848,7 +16932,7 @@ GameObject:
   - component: {fileID: 2132100697}
   - component: {fileID: 2132100696}
   - component: {fileID: 2132100695}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16905,6 +16989,12 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  playerInputSpace: {fileID: 0}
 --- !u!96 &2132100697
 TrailRenderer:
   serializedVersion: 2
@@ -17077,6 +17167,14 @@ PrefabInstance:
     - target: {fileID: 2812188993820467055, guid: 252fb722d6566d546ac609038f3dabbb, type: 3}
       propertyPath: m_Name
       value: Sphere
+      objectReference: {fileID: 0}
+    - target: {fileID: 2812188993820467055, guid: 252fb722d6566d546ac609038f3dabbb, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2812188993820467089, guid: 252fb722d6566d546ac609038f3dabbb, type: 3}
+      propertyPath: probeMask.m_Bits
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 2812188993820467092, guid: 252fb722d6566d546ac609038f3dabbb, type: 3}
       propertyPath: m_RootOrder

@@ -31,23 +31,35 @@ public class PushSphereAround : MonoBehaviour
     [SerializeField, Range(0, 5)]
     int maxJumpCount = 1;
 
-    int groundContactCount;
+    // steepContactCount：陡峭的墙壁，不是天花板类型，很陡的坡
+    int groundContactCount, steepContactCount;
 
     [SerializeField]
     bool onGround => groundContactCount > 0;
 
+    bool OnSteep => steepContactCount > 0;
+
     int jumpCount = 0;
 
     [SerializeField, Range(0, 90)]
-    float maxGroundAngle = 25f;
+    float maxGroundAngle = 25f, maxStairsAngle = 25f;
 
-    float minGroundDotProduct;
+    float minGroundDotProduct, minStairsDotProduct;
 
-    Vector3 contactNormal;
+    Vector3 contactNormal, steepNormal;
     #endregion
 
     #region Unit3
-    int stepsSinceLastGrouded;
+    int stepsSinceLastGrouded, stepsSinceLastJump;
+
+    [SerializeField, Range(0f, 100f)]
+    float maxSnapSpeed = 100f;
+
+    [SerializeField, Min(0f)]
+    float probeDistance = 1f;
+
+    [SerializeField]
+    LayerMask probeMask = -1, stairsMask = -1;
     #endregion
 
     #region Unit4
@@ -70,6 +82,7 @@ public class PushSphereAround : MonoBehaviour
     private void OnValidate()
     {
         minGroundDotProduct = Mathf.Cos(maxGroundAngle * Mathf.Deg2Rad);
+        minStairsDotProduct = Mathf.Cos(maxStairsAngle * Mathf.Deg2Rad);
     }
 
     // Update is called once per frame
@@ -112,7 +125,7 @@ public class PushSphereAround : MonoBehaviour
         //}
 
         //transform.localPosition = newPosition;
-        desiredJump |= Input.GetButtonDown("Jump") & onGround;
+        desiredJump |= Input.GetButtonDown("Jump");
 
         myRender.material.SetColor("_BaseColor", onGround ? Color.black : Color.white);
     }
@@ -125,8 +138,8 @@ public class PushSphereAround : MonoBehaviour
 
     private void ClearState()
     {
-        groundContactCount = 0;
-        contactNormal = Vector3.zero;
+        groundContactCount = steepContactCount = 0;
+        contactNormal = steepNormal = Vector3.zero;
     }
 
     private void FixedUpdate()
@@ -134,7 +147,7 @@ public class PushSphereAround : MonoBehaviour
         UpdateState();
         AdjustVelocity();
 
-        if (desiredJump && onGround && jumpCount < maxJumpCount)
+        if (desiredJump)
         {
             desiredJump = false;
             Jump();
@@ -146,24 +159,54 @@ public class PushSphereAround : MonoBehaviour
 
     void Jump()
     {
+        Vector3 jumpDirection;
+        if (onGround)
+        {
+            jumpDirection = contactNormal;
+        }
+        else if(OnSteep)
+        {
+            jumpDirection = steepNormal;
+            jumpCount = 0;
+        }
+        else if(maxJumpCount > 0 && jumpCount <= maxJumpCount)
+        {
+            if(jumpCount == 0)
+            {
+                jumpCount = 1;
+            }
+            jumpDirection = contactNormal;
+        }
+        else
+        {
+            return;
+        }
+
         jumpCount++;
+        stepsSinceLastJump = 0;
         float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
-        float alignedSpeed = Vector3.Dot(contactNormal, velocity);
+        jumpDirection = (jumpDirection + Vector3.up).normalized;
+        float alignedSpeed = Vector3.Dot(jumpDirection, velocity);
         if(alignedSpeed > 0)
         {
             jumpSpeed = Mathf.Max(jumpSpeed - alignedSpeed, 0f);
         }
 
-        velocity += contactNormal * jumpSpeed;
+        velocity += jumpDirection * jumpSpeed;
     }
 
     void UpdateState()
     {
         stepsSinceLastGrouded += 1;
+        stepsSinceLastJump += 1;
         velocity = myBody.velocity;
-        if (onGround || SnapToGround())
+        if (onGround || SnapToGround() || CheckSteepContacts())
         {
-            jumpCount = 0;
+            if (stepsSinceLastJump > 1)
+            {
+                jumpCount = 0;
+            }
+
             stepsSinceLastGrouded = 0;
             if (groundContactCount > 1)
             {
@@ -183,13 +226,19 @@ public class PushSphereAround : MonoBehaviour
 
     private void EvaluateCollision(Collision collison)
     {
+        float minDot = GetMinDot(collison.gameObject.layer);
         foreach(var contact in collison.contacts)
         {
             Vector3 normal = contact.normal;
-            if(normal.y > minGroundDotProduct)
+            if(normal.y >= minDot)
             {
                 groundContactCount += 1;
                 contactNormal += normal;
+            }
+            else if (normal.y > -0.01f)
+            {
+                steepContactCount += 1;
+                steepNormal += normal;
             }
         }
     }
@@ -222,29 +271,64 @@ public class PushSphereAround : MonoBehaviour
 
     bool SnapToGround()
     {
-        if (stepsSinceLastGrouded > 1)
+        if (stepsSinceLastGrouded > 1 || stepsSinceLastJump <= 2)
         {
             return false;
         }
 
-        if (!Physics.Raycast(myBody.position, Vector3.down, out RaycastHit hitInfo))
+        float speed = velocity.magnitude;
+        if(speed > maxSnapSpeed)
         {
             return false;
         }
 
-        if(hitInfo.normal.y < minGroundDotProduct)
+        if (!Physics.Raycast(myBody.position, Vector3.down, out RaycastHit hitInfo, probeDistance, probeMask))
+        {
+            return false;
+        }
+
+        if(hitInfo.normal.y < GetMinDot(hitInfo.collider.gameObject.layer))
         {
             return false;
         }
 
         groundContactCount = 1;
         contactNormal = hitInfo.normal;
-        float speed = velocity.magnitude;
         float dot = Vector3.Dot(velocity, contactNormal);
         if(dot > 0f)
         {
             velocity = (velocity - hitInfo.normal * dot).normalized * speed;
         }
         return true;
+    }
+
+    /// <summary>
+    /// 通过目标Layer获取当前该使用法线的最小值
+    /// </summary>
+    /// <param name="layer"></param>
+    /// <returns></returns>
+    float GetMinDot(int layer)
+    {
+        return (stairsMask & (1 << layer)) == 0 ? minGroundDotProduct : minStairsDotProduct;
+    }
+
+    /// <summary>
+    /// 检查是否处于接触过陡的坡，可将其总法线方向视作一块虚拟地面的法线
+    /// </summary>
+    /// <returns></returns>
+    bool CheckSteepContacts()
+    {
+        if(steepContactCount > 1)
+        {
+            steepNormal.Normalize();
+            if (steepNormal.y >= minGroundDotProduct)
+            {
+                groundContactCount = 1;
+                contactNormal = steepNormal;
+                return true;
+            }
+        }
+
+        return false;
     }
 }

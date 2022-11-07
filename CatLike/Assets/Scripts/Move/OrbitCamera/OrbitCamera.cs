@@ -91,11 +91,20 @@ public class OrbitCamera : MonoBehaviour
 
         Vector3 lookDirection = orbit * Vector3.forward;
         Vector3 lookPos = focusPos - lookDirection * distance;
-        //if (Physics.BoxCast(focusPos, CameraHalfExtends, -lookDirection, out RaycastHit hitInfo, orbit, distance - regularCamera.nearClipPlane))
-        //{
-        //    lookPos = focusPos - lookDirection * (hitInfo.distance + regularCamera.nearClipPlane);
-        //}
-       
+
+        Vector3 rectOffset = lookDirection * regularCamera.nearClipPlane;
+        Vector3 rectPos = focusOn.position + rectOffset;
+        Vector3 castFrom = focusOn.position;
+        Vector3 castLine = rectPos - castFrom;
+        float castDistance = castLine.magnitude;
+        Vector3 castDirection = castLine / castDistance;
+
+        if (Physics.BoxCast(castFrom, CameraHalfExtends, castDirection, out RaycastHit hitInfo, orbit, castDistance))
+        {
+            rectPos = castFrom + castDirection * hitInfo.distance;
+            lookPos = rectPos - rectOffset;
+        }
+
         transform.SetPositionAndRotation(lookPos, orbit);
     }
 
@@ -173,22 +182,27 @@ public class OrbitCamera : MonoBehaviour
             return false;
         }
 
-        float headingAngle = GetAngle(movement / Mathf.Sqrt(movementDeltaSqr));
-        // 减少小角度偏移时相机的旋转速度
-        float deltaAbs = Mathf.Abs(Mathf.DeltaAngle(orbitAngle.y, headingAngle));
-        float rotationChange = rotateSpeed * Mathf.Min(Time.unscaledDeltaTime, movementDeltaSqr);
-        if (deltaAbs < alignSmoothRange)
-        {
-            rotationChange *= deltaAbs / alignSmoothRange;
-        }
-        else if(180f - deltaAbs < alignSmoothRange)
-        {
-            rotationChange *= (180f - deltaAbs) / alignSmoothRange;
-        }
-        orbitAngle.y = Mathf.MoveTowardsAngle(orbitAngle.y, headingAngle, rotationChange);
+        //float headingAngle = GetAngle(movement.normalized);
+        //// 减少小角度偏移时相机的旋转速度
+        //float deltaAbs = Mathf.Abs(Mathf.DeltaAngle(orbitAngle.y, headingAngle));
+        //float rotationChange = rotateSpeed * Mathf.Min(Time.unscaledDeltaTime, movementDeltaSqr);
+        //if (deltaAbs < alignSmoothRange)
+        //{
+        //    rotationChange *= deltaAbs / alignSmoothRange;
+        //}
+        //else if(180f - deltaAbs < alignSmoothRange)
+        //{
+        //    rotationChange *= (180f - deltaAbs) / alignSmoothRange;
+        //}
+        //orbitAngle.y = Mathf.MoveTowardsAngle(orbitAngle.y, headingAngle, rotationChange);
         return true;
     }
 
+    /// <summary>
+    /// direction默认标准化，angle反余弦来计算角度，通过x正负来判断是否进一步换算到0-360内
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
     static float GetAngle(Vector2 direction)
     {
         float angle = Mathf.Acos(direction.y) * Mathf.Rad2Deg;
