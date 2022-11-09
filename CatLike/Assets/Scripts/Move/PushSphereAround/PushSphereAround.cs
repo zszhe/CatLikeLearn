@@ -44,6 +44,7 @@ public class PushSphereAround : MonoBehaviour
     [SerializeField, Range(0, 90)]
     float maxGroundAngle = 25f, maxStairsAngle = 25f;
 
+    //表面水平时，其法线向量的Y分量为1。对于完全垂直的墙，Y分量为零
     float minGroundDotProduct, minStairsDotProduct;
 
     Vector3 contactNormal, steepNormal;
@@ -67,6 +68,10 @@ public class PushSphereAround : MonoBehaviour
     Transform playerInputSpace = default;
     #endregion
 
+    #region Unit5
+    Vector3 upAxis, rightAxis, forwadAxis;
+    #endregion
+
     #region MyProperty
     Renderer myRender;
     #endregion
@@ -75,6 +80,7 @@ public class PushSphereAround : MonoBehaviour
     {
         startPos = transform.localPosition;
         myBody = GetComponent<Rigidbody>();
+        myBody.useGravity = false;
         myRender = GetComponent<Renderer>();
         OnValidate();
     }
@@ -103,19 +109,18 @@ public class PushSphereAround : MonoBehaviour
         // 坐标空间转换到摄像头的方向
         if (playerInputSpace)
         {
+            rightAxis = ProjecDirectionOnPlane(playerInputSpace.right, upAxis);
+            forwadAxis = ProjecDirectionOnPlane(playerInputSpace.forward, upAxis);
             // 前后左右方向转向摄像头的本地坐标
-            Vector3 forward = playerInputSpace.forward;
-            forward.y = 0;
-            forward.Normalize();
-            Vector3 right = playerInputSpace.right;
-            right.y = 0f;
-            right.Normalize();
-            disiredVelocity = (playerInput.x * forward + playerInput.y * right) * speedRate;
+            
         }
         else
         {
-            disiredVelocity = new Vector3(playerInput.x, 0.0f, playerInput.y) * speedRate;
+            rightAxis = ProjecDirectionOnPlane(Vector3.right, upAxis);
+            forwadAxis = ProjecDirectionOnPlane(Vector3.forward, upAxis);
         }
+
+        disiredVelocity = new Vector3(playerInput.x, 0.0f, playerInput.y) * speedRate;
 
         //Vector3 newPosition = transform.localPosition + velocity * Time.deltaTime;
         //if(!allowedArea.Contains(new Vector2(newPosition.x, newPosition.z)))
@@ -144,20 +149,23 @@ public class PushSphereAround : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Vector3 gravity = CustomGravity.GetGravity(myBody.position, out upAxis);
         UpdateState();
         AdjustVelocity();
 
         if (desiredJump)
         {
             desiredJump = false;
-            Jump();
+            Jump(gravity);
         }
+
+        velocity += gravity * Time.deltaTime;
 
         myBody.velocity = velocity;
         ClearState();
     }
 
-    void Jump()
+    void Jump(Vector3 gravity)
     {
         Vector3 jumpDirection;
         if (onGround)
@@ -184,8 +192,8 @@ public class PushSphereAround : MonoBehaviour
 
         jumpCount++;
         stepsSinceLastJump = 0;
-        float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * jumpHeight);
-        jumpDirection = (jumpDirection + Vector3.up).normalized;
+        float jumpSpeed = Mathf.Sqrt(2f * gravity.magnitude * jumpHeight);
+        jumpDirection = (jumpDirection + upAxis).normalized;
         float alignedSpeed = Vector3.Dot(jumpDirection, velocity);
         if(alignedSpeed > 0)
         {
@@ -215,7 +223,8 @@ public class PushSphereAround : MonoBehaviour
         }
         else
         {
-            contactNormal = Vector3.up;
+            // 球体处于空中
+            contactNormal = upAxis;
         }
     }
 
@@ -230,12 +239,13 @@ public class PushSphereAround : MonoBehaviour
         foreach(var contact in collison.contacts)
         {
             Vector3 normal = contact.normal;
-            if(normal.y >= minDot)
+            float upDot = Vector3.Dot(normal, upAxis);
+            if(upDot >= minDot)
             {
                 groundContactCount += 1;
                 contactNormal += normal;
             }
-            else if (normal.y > -0.01f)
+            else if (upDot > -0.01f)
             {
                 steepContactCount += 1;
                 steepNormal += normal;
@@ -251,11 +261,18 @@ public class PushSphereAround : MonoBehaviour
         return vector - contactNormal * Vector3.Dot(vector, contactNormal);
     }
 
+    Vector3 ProjecDirectionOnPlane(Vector3 direction, Vector3 normal)
+    {
+        return (direction - normal * Vector3.Dot(direction, normal)).normalized;
+    }
+
     // 将速度换算到斜面上
     void AdjustVelocity()
     {
-        Vector3 newXAxis = ProjectOnContactPlane(Vector3.right).normalized;
-        Vector3 newZAxis = ProjectOnContactPlane(Vector3.forward).normalized;
+        //Vector3 newXAxis = ProjectOnContactPlane(Vector3.right).normalized;
+        //Vector3 newZAxis = ProjectOnContactPlane(Vector3.forward).normalized;
+        Vector3 newXAxis = ProjecDirectionOnPlane(rightAxis, contactNormal);
+        Vector3 newZAxis = ProjecDirectionOnPlane(forwadAxis, contactNormal);
 
         float currentX = Vector3.Dot(velocity, newXAxis);
         float currentZ = Vector3.Dot(velocity, newZAxis);
@@ -282,12 +299,15 @@ public class PushSphereAround : MonoBehaviour
             return false;
         }
 
-        if (!Physics.Raycast(myBody.position, Vector3.down, out RaycastHit hitInfo, probeDistance, probeMask))
+        if (!Physics.Raycast(myBody.position, -upAxis, out RaycastHit hitInfo, probeDistance, probeMask))
         {
             return false;
         }
 
-        if(hitInfo.normal.y < GetMinDot(hitInfo.collider.gameObject.layer))
+        // 表面水平时，其法线向量的Y分量为1。对于完全垂直的墙，Y分量为零
+        float upDot = Vector3.Dot(upAxis, hitInfo.normal);
+        // upDot代表normal在对应转换后的upAxis坐标系里y方向标量
+        if (upDot < GetMinDot(hitInfo.collider.gameObject.layer))
         {
             return false;
         }
@@ -321,7 +341,8 @@ public class PushSphereAround : MonoBehaviour
         if(steepContactCount > 1)
         {
             steepNormal.Normalize();
-            if (steepNormal.y >= minGroundDotProduct)
+            float upDot = Vector3.Dot(upAxis, steepNormal);
+            if (upDot >= minGroundDotProduct)
             {
                 groundContactCount = 1;
                 contactNormal = steepNormal;

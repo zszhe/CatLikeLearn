@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2812188993820467088}
   - component: {fileID: 2812188993820467089}
   - component: {fileID: 2812188993820467054}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,7 +29,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2812188993820467055}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 6}
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children: []
@@ -218,6 +218,16 @@ MonoBehaviour:
   jumpHeight: 2
   maxJumpCount: 1
   maxGroundAngle: 25
+  maxStairsAngle: 25
+  maxSnapSpeed: 100
+  probeDistance: 1
+  probeMask:
+    serializedVersion: 2
+    m_Bits: 51
+  stairsMask:
+    serializedVersion: 2
+    m_Bits: 128
+  playerInputSpace: {fileID: 0}
 --- !u!54 &2812188993820467054
 Rigidbody:
   m_ObjectHideFlags: 0

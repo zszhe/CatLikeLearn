@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MoveSphere : MonoBehaviour
 {
+    #region Unit1
     [SerializeField]
     Vector2 playerInput;
 
@@ -20,9 +21,16 @@ public class MoveSphere : MonoBehaviour
 
     [SerializeField, Range(0,1)]
     float bounciness = 0.5f;
+    #endregion
 
+    #region Unit4
     [SerializeField]
     Transform playerInputSpace = default;
+    #endregion
+
+    #region Unit5
+    Vector3 upAxis;
+    #endregion
     // Start is called before the first frame update
     void Start()
     {
@@ -66,6 +74,11 @@ public class MoveSphere : MonoBehaviour
         }
 
         transform.localPosition = newPosition;
+    }
+
+    private void FixedUpdate()
+    {
+        upAxis = -Physics.gravity.normalized;
     }
 
     Vector3 LimitPos(Vector3 newPosition)

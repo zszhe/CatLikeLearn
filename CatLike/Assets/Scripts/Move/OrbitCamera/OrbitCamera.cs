@@ -45,6 +45,12 @@ public class OrbitCamera : MonoBehaviour
 
     Camera regularCamera;
 
+    [SerializeField]
+    LayerMask layer = -1;
+
+    Quaternion gravityAlignment = Quaternion.identity;
+
+    Quaternion orbitRotation;
     Vector3 CameraHalfExtends
     {
         get
@@ -62,7 +68,7 @@ public class OrbitCamera : MonoBehaviour
     {
         regularCamera = GetComponent<Camera>();
         focusPos = focusOn.position;
-        transform.localRotation = Quaternion.Euler(orbitAngle);
+        transform.localRotation = orbitRotation = Quaternion.Euler(orbitAngle);
     }
 
     private void OnValidate()
@@ -81,15 +87,17 @@ public class OrbitCamera : MonoBehaviour
 
     private void LateUpdate()
     {
+        gravityAlignment = Quaternion.FromToRotation(gravityAlignment * Vector3.up, -CustomGravity.GetGravity(focusPos).normalized) * gravityAlignment;
+
         UpdateFocusPoint();
-        Quaternion orbit = transform.localRotation;
         if (ManualRotation() || AutomaticRotation())
         {
             ConstrainAngles();
-            orbit = Quaternion.Euler(orbitAngle);
+            orbitRotation = Quaternion.Euler(orbitAngle);
         }
 
-        Vector3 lookDirection = orbit * Vector3.forward;
+        Quaternion lookRotation = gravityAlignment * orbitRotation;
+        Vector3 lookDirection = lookRotation * Vector3.forward;
         Vector3 lookPos = focusPos - lookDirection * distance;
 
         Vector3 rectOffset = lookDirection * regularCamera.nearClipPlane;
@@ -99,13 +107,13 @@ public class OrbitCamera : MonoBehaviour
         float castDistance = castLine.magnitude;
         Vector3 castDirection = castLine / castDistance;
 
-        if (Physics.BoxCast(castFrom, CameraHalfExtends, castDirection, out RaycastHit hitInfo, orbit, castDistance))
+        if (Physics.BoxCast(castFrom, CameraHalfExtends, castDirection, out RaycastHit hitInfo, lookRotation, castDistance, layer))
         {
             rectPos = castFrom + castDirection * hitInfo.distance;
             lookPos = rectPos - rectOffset;
         }
 
-        transform.SetPositionAndRotation(lookPos, orbit);
+        transform.SetPositionAndRotation(lookPos, lookRotation);
     }
 
     /// <summary>
@@ -173,9 +181,10 @@ public class OrbitCamera : MonoBehaviour
             return false;
         }
 
-        Vector2 movement = new Vector2(
-            focusPos.x - prefocusPos.x,
-            focusPos.z - prefocusPos.z);
+        Vector3 alignedDelta =
+             Quaternion.Inverse(gravityAlignment) *
+             (focusPos - prefocusPos);
+        Vector2 movement = new Vector2(alignedDelta.x, alignedDelta.z);
         float movementDeltaSqr = movement.sqrMagnitude;
         if(movementDeltaSqr < 0.0001f)
         {
