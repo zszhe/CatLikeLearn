@@ -966,6 +966,16 @@ namespace UnityEngine.ProBuilder
             set { m_Mesh = value; }
         }
 
+        public Mesh GetMesh
+        {
+            get
+            {
+                if (m_Mesh == null && filter != null)
+                    m_Mesh = filter.sharedMesh;
+                return m_Mesh;
+            }
+        }
+
         internal int id
         {
             get { return gameObject.GetInstanceID(); }

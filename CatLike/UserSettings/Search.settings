@@ -13,6 +13,9 @@ scopes = {
 	"last_search.83F126EB" = "UnityInstan"
 	"InspectorPreview.83F126EB" = "0"
 	"currentGroup.83F126EB" = "asset"
+	"last_search.B064B029" = "Opencv"
+	"InspectorPreview.B064B029" = "0"
+	"currentGroup.B064B029" = "all"
 }
 providers = {
 	asset = {
@@ -52,6 +55,7 @@ providers = {
 	}
 }
 recentSearches = [
+	"Opencv"
 	"UnityInstan"
 ]
 searchItemFavorites = [

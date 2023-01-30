@@ -45,6 +45,7 @@ public class PushSphereAround : MonoBehaviour
     float maxGroundAngle = 25f, maxStairsAngle = 25f;
 
     //表面水平时，其法线向量的Y分量为1。对于完全垂直的墙，Y分量为零
+    [SerializeField]
     float minGroundDotProduct, minStairsDotProduct;
 
     Vector3 contactNormal, steepNormal;

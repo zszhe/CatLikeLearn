@@ -51,6 +51,10 @@ public class OrbitCamera : MonoBehaviour
     Quaternion gravityAlignment = Quaternion.identity;
 
     Quaternion orbitRotation;
+
+    [SerializeField, Min(0f)]
+    float upAlignmentSpeed = 360f;
+
     Vector3 CameraHalfExtends
     {
         get
@@ -87,7 +91,7 @@ public class OrbitCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        gravityAlignment = Quaternion.FromToRotation(gravityAlignment * Vector3.up, -CustomGravity.GetGravity(focusPos).normalized) * gravityAlignment;
+        UpdateGravityAlignmen();
 
         UpdateFocusPoint();
         if (ManualRotation() || AutomaticRotation())
@@ -216,5 +220,24 @@ public class OrbitCamera : MonoBehaviour
     {
         float angle = Mathf.Acos(direction.y) * Mathf.Rad2Deg;
         return direction.x < 0f ? 360f - angle : angle;
+    }
+
+    void UpdateGravityAlignmen()
+    {
+        Vector3 fromUp = gravityAlignment * Vector3.up;
+        Vector3 toUp = CustomGravity.GetUpAxis(focusPos);
+
+        float dot = Mathf.Clamp(Vector3.Dot(fromUp, toUp), -1f, 1f);
+        float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+        Quaternion newAlignment = Quaternion.FromToRotation(fromUp, toUp) * gravityAlignment;
+        float maxAngle = upAlignmentSpeed * Time.deltaTime;
+        if(angle <= maxAngle)
+        {
+            gravityAlignment = newAlignment;
+        }
+        else
+        {
+            gravityAlignment = Quaternion.SlerpUnclamped(gravityAlignment, newAlignment, maxAngle / angle);
+        }
     }
 }

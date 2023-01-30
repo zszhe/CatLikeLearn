@@ -111,8 +111,13 @@
 -define:ENABLE_TILEMAP
 -define:ENABLE_TIMELINE
 -define:ENABLE_LEGACY_INPUT_MANAGER
+-define:OPENCV_USE_UNSAFE_CODE
 -define:CSHARP_7_OR_LATER
 -define:CSHARP_7_3_OR_NEWER
+-r:"Assets/Plugins/netstandard2.0/OpenCvSharp.dll"
+-r:"Assets/Plugins/netstandard2.0/System.Buffers.dll"
+-r:"Assets/Plugins/netstandard2.0/System.Memory.dll"
+-r:"Assets/Plugins/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/2021.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/2021.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.DeviceSimulatorModule.dll"
 -r:"C:/Program Files/Unity/Hub/Editor/2021.1.14f1/Editor/Data/Managed/UnityEngine/UnityEditor.dll"
@@ -347,16 +352,27 @@
 "Assets/Scripts/Base/Graph/GraphEnum.cs"
 "Assets/Scripts/Base/Graph/GraphFunction.cs"
 "Assets/Scripts/Base/Graph/ScrollRolling.cs"
+"Assets/Scripts/CameraRotate.cs"
+"Assets/Scripts/Move/Gravity/ChangeNormal.cs"
 "Assets/Scripts/Move/Gravity/CustomGravity.cs"
 "Assets/Scripts/Move/Gravity/CustomRigidbody.cs"
+"Assets/Scripts/Move/Gravity/GravityBox.cs"
 "Assets/Scripts/Move/Gravity/GravityManager.cs"
+"Assets/Scripts/Move/Gravity/GravityPanel.cs"
+"Assets/Scripts/Move/Gravity/GravitySource.cs"
+"Assets/Scripts/Move/Gravity/GravitySphere.cs"
 "Assets/Scripts/Move/OrbitCamera/OrbitCamera.cs"
 "Assets/Scripts/Move/PushSphereAround/PushSphereAround.cs"
 "Assets/Scripts/Move/SampleMove/MoveSphere.cs"
+"Assets/Scripts/ObjManager/Game.cs"
+"Assets/Scripts/Parallel.cs"
+"Assets/Scripts/PhotoTest.cs"
+"Assets/Scripts/PhotoTest1.cs"
+"Assets/Scripts/PhotoTest2.cs"
 "Assets/Scripts/ResolutionManager.cs"
 "Assets/Scripts/Test.cs"
 -langversion:8.0
-
+/unsafe+
 /deterministic
 /optimize-
 /debug:portable
