@@ -4,6 +4,8 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine.Events;
+using System.Diagnostics;
+using AOT;
 
 /// <summary>
 ///强制设置Unity游戏窗口的长宽比。你可以调整窗口的大小，他会强制保持一定比例
@@ -43,6 +45,14 @@ public class ResolutionManager : MonoBehaviour
             return _instance;
         }
     }
+
+    [Conditional("UNITY_STANDALONE")]
+    public static void Init()
+    {
+        Instance.enableEditWindow = true;
+    }
+
+    private bool enableEditWindow = false;
 
     public ResolutionChangedEvent resolutionChangedEvent;
     [Serializable]
@@ -165,8 +175,8 @@ public class ResolutionManager : MonoBehaviour
     static extern long GetWindowLong64(IntPtr hWnd, int nIndex);
 
     //用于查找窗口句柄的Unity窗口类的名称
-    private const string UNITY_WND_CLASSNAME = "UnityContainer";
-    //private const string UNITY_WND_CLASSNAME = "UnityWndClass";
+    private const string UNITY_WND_CLASSNAME1 = "UnityContainer";
+    private const string UNITY_WND_CLASSNAME = "UnityWndClass";
 
     // Unity窗口的窗口句柄
     private IntPtr unityHWnd;
@@ -191,73 +201,72 @@ public class ResolutionManager : MonoBehaviour
 
     #endregion
 
-    public void Init()
-    {
-
-    }
-
     void Start()
     {
         // 不要在Unity编辑器中注册WindowProc回调函数，它会指向Unity编辑器窗口，而不是Game视图
         // Unity的句柄是 UnityContainer
+        if (enableEditWindow)
+        {
+            //注册回调，然后应用程序想要退出
+            Application.wantsToQuit += ApplicationWantsToQuit;
+            string temp = UNITY_WND_CLASSNAME;
 #if UNITY_EDITOR
-        //注册回调，然后应用程序想要退出
-        Application.wantsToQuit += ApplicationWantsToQuit;
- 
-        // 找到主Unity窗口的窗口句柄
-        EnumThreadWindows(GetCurrentThreadId(), (hWnd, lParam) =>
-        {
-            var classText = new StringBuilder(UNITY_WND_CLASSNAME.Length + 1);
-            GetClassName(hWnd, classText, classText.Capacity);
-
-            Debug.Log(classText.ToString());
-            if (classText.ToString() == UNITY_WND_CLASSNAME)
-            {
-                unityHWnd = hWnd;
-                return false;
-            }
-            return true;
-        }, IntPtr.Zero);
-
-        // 计算窗口边框的宽度和高度
-        RECT windowRect = new RECT();
-        GetWindowRect(unityHWnd, ref windowRect);
-
-        RECT clientRect = new RECT();
-        GetClientRect(unityHWnd, ref clientRect);
-
-        int borderWidth = windowRect.Right - windowRect.Left - (clientRect.Right - clientRect.Left);
-        int borderHeight = windowRect.Bottom - windowRect.Top - (clientRect.Bottom - clientRect.Top);
-
-        offsetWidth = borderHeight > borderWidth ? offsetWidth + borderHeight : offsetWidth + borderWidth;
-
-        maxHeightPixel = Screen.currentResolution.height - offsetWidth;
-        maxWidthPixel = Screen.currentResolution.width - offsetWidth;
-        // 将长宽比应用于当前分辨率
-        SetAspectRatio(aspectRatioWidth, aspectRatioHeight, true);
- 
-        // 保存当前的全屏状态
-        wasFullscreenLastFrame = Screen.fullScreen;
- 
-        // Register (replace) WindowProc callback。每当一个窗口事件被触发时，这个函数都会被调用
-        //例如调整大小或移动窗口
-        //保存旧的WindowProc回调函数，因为必须从新回调函数中调用它
-        wndProcDelegate = WndProc;
-        newWndProcPtr = Marshal.GetFunctionPointerForDelegate(wndProcDelegate);
-        oldWndProcPtr = SetWindowLong(unityHWnd, GWLP_WNDPROC, newWndProcPtr);
-
-        try
-        {
-            SetWindowLong(unityHWnd, GWL_STYLE, new IntPtr(GetWindowLong(unityHWnd, GWL_STYLE) & ~WS_MAXIMIZEBOX));
-        }
-        catch(Exception e)
-        {
-            Debug.LogError(e.Message);
-        }
-
-        // 初始化完成
-        started = true;
+            temp = UNITY_WND_CLASSNAME1;
 #endif
+            // 找到主Unity窗口的窗口句柄
+            EnumThreadWindows(GetCurrentThreadId(), (hWnd, lParam) =>
+            {
+                var classText = new StringBuilder(temp.Length + 1);
+                GetClassName(hWnd, classText, classText.Capacity);
+
+                UnityEngine.Debug.Log(classText.ToString());
+                if (classText.ToString() == temp)
+                {
+                    unityHWnd = hWnd;
+                    return false;
+                }
+                return true;
+            }, IntPtr.Zero);
+
+            // 计算窗口边框的宽度和高度
+            RECT windowRect = new RECT();
+            GetWindowRect(unityHWnd, ref windowRect);
+
+            RECT clientRect = new RECT();
+            GetClientRect(unityHWnd, ref clientRect);
+
+            int borderWidth = windowRect.Right - windowRect.Left - (clientRect.Right - clientRect.Left);
+            int borderHeight = windowRect.Bottom - windowRect.Top - (clientRect.Bottom - clientRect.Top);
+
+            offsetWidth = borderHeight > borderWidth ? offsetWidth + borderHeight : offsetWidth + borderWidth;
+
+            maxHeightPixel = Screen.currentResolution.height - offsetWidth;
+            maxWidthPixel = Screen.currentResolution.width - offsetWidth;
+            // 将长宽比应用于当前分辨率
+            SetAspectRatio(aspectRatioWidth, aspectRatioHeight, true);
+
+            // 保存当前的全屏状态
+            wasFullscreenLastFrame = Screen.fullScreen;
+
+            // Register (replace) WindowProc callback。每当一个窗口事件被触发时，这个函数都会被调用
+            //例如调整大小或移动窗口
+            //保存旧的WindowProc回调函数，因为必须从新回调函数中调用它
+            wndProcDelegate = WndProc;
+            newWndProcPtr = Marshal.GetFunctionPointerForDelegate(wndProcDelegate);
+            oldWndProcPtr = SetWindowLong(unityHWnd, GWLP_WNDPROC, newWndProcPtr);
+
+            try
+            {
+                SetWindowLong(unityHWnd, GWL_STYLE, new IntPtr(GetWindowLong(unityHWnd, GWL_STYLE) & ~WS_MAXIMIZEBOX));
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError(e.Message);
+            }
+
+            // 初始化完成
+            started = true;
+        }
 
     }
 
@@ -353,6 +362,7 @@ public class ResolutionManager : MonoBehaviour
     /// <param name="wParam">额外的信息信息。该参数的内容取决于uMsg参数的值 </param>
     /// <param name="lParam">其他消息的信息。该参数的内容取决于uMsg参数的值 </param>
     /// <returns></returns>
+    [MonoPInvokeCallback(typeof(WndProcDelegate))]
     private IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
     {
         // 检查消息类型
@@ -379,7 +389,7 @@ public class ResolutionManager : MonoBehaviour
             // 限制窗口大小
             int newWidth = Mathf.Clamp(rc.Right - rc.Left, minWidthPixel, maxWidthPixel);
             int newHeight = Mathf.Clamp(rc.Bottom - rc.Top, minHeightPixel, maxHeightPixel);
-            Debug.Log("Before:  " + rc.Right + "  " + rc.Left + "  " + rc.Bottom + "  " + rc.Top);
+            UnityEngine.Debug.Log("Before:  " + rc.Right + "  " + rc.Left + "  " + rc.Bottom + "  " + rc.Top);
             // 根据纵横比和方向调整大小
             switch (wParam.ToInt32())
             {
@@ -444,74 +454,79 @@ public class ResolutionManager : MonoBehaviour
         return CallWindowProc(oldWndProcPtr, hWnd, msg, wParam, lParam);
     }
 
-//    void Update()
-//    {
-//        // 如果不允许全屏，则阻止切换到全屏
-//        if (!allowFullscreen && Screen.fullScreen)
-//        {
-//            Screen.fullScreen = false;
-//        }
 
-//        if (Screen.fullScreen && !wasFullscreenLastFrame)
-//        {
-//            //切换到全屏检测,设置为最大屏幕分辨率，同时保持长宽比
-//            int height;
-//            int width;
+    private void Update()
+    {
+        SetWindowLong(unityHWnd, GWL_STYLE, new IntPtr(GetWindowLong(unityHWnd, GWL_STYLE) & ~WS_MAXIMIZEBOX));
+    }
+    //    void Update()
+    //    {
+    //        // 如果不允许全屏，则阻止切换到全屏
+    //        if (!allowFullscreen && Screen.fullScreen)
+    //        {
+    //            Screen.fullScreen = false;
+    //        }
 
-//            //根据当前长宽比和显示器的比例进行比较，上下或左右添加黑边
-//            bool blackBarsLeftRight = aspect < (float)pixelWidthOfCurrentScreen / pixelHeightOfCurrentScreen;
+    //        if (Screen.fullScreen && !wasFullscreenLastFrame)
+    //        {
+    //            //切换到全屏检测,设置为最大屏幕分辨率，同时保持长宽比
+    //            int height;
+    //            int width;
 
-//            if (blackBarsLeftRight)
-//            {
-//                height = pixelHeightOfCurrentScreen;
-//                width = Mathf.RoundToInt(pixelHeightOfCurrentScreen * aspect);
-//            }
-//            else
-//            {
-//                width = pixelWidthOfCurrentScreen;
-//                height = Mathf.RoundToInt(pixelWidthOfCurrentScreen / aspect);
-//            }
+    //            //根据当前长宽比和显示器的比例进行比较，上下或左右添加黑边
+    //            bool blackBarsLeftRight = aspect < (float)pixelWidthOfCurrentScreen / pixelHeightOfCurrentScreen;
 
-//            Screen.SetResolution(width, height, true);
-//            resolutionChangedEvent?.Invoke(width, height, true);
-//        }
-//        else if (!Screen.fullScreen && wasFullscreenLastFrame)
-//        {
-//            // 从全屏切换到检测到的窗口。设置上一个窗口的分辨率。
-//            Screen.SetResolution(setWidth, setHeight, false);
-//            resolutionChangedEvent?.Invoke(setWidth, setHeight, false);
-//        }
-//        else if (!Screen.fullScreen && setWidth != -1 && setHeight != -1 && (Screen.width != setWidth || Screen.height != setHeight))
-//        {
-//            //根据高度设置宽度，因为Aero Snap不会触发WM_SIZING。
-//            setHeight = Screen.height;
-//            setWidth = Mathf.RoundToInt(Screen.height * aspect);
+    //            if (blackBarsLeftRight)
+    //            {
+    //                height = pixelHeightOfCurrentScreen;
+    //                width = Mathf.RoundToInt(pixelHeightOfCurrentScreen * aspect);
+    //            }
+    //            else
+    //            {
+    //                width = pixelWidthOfCurrentScreen;
+    //                height = Mathf.RoundToInt(pixelWidthOfCurrentScreen / aspect);
+    //            }
 
-//            Screen.SetResolution(setWidth, setHeight, Screen.fullScreen);
-//            resolutionChangedEvent?.Invoke(setWidth, setHeight, Screen.fullScreen);
-//        }
-//        else if (!Screen.fullScreen)
-//        {
-//            // 保存当前屏幕的分辨率
-//            // 下次切换到全屏时，此分辨率将被设置为窗口分辨率
-//            // 只有高度，如果需要，宽度将根据高度和长宽比设置，以确保长宽比保持在全屏模式
-//            pixelHeightOfCurrentScreen = Screen.currentResolution.height;
-//            pixelWidthOfCurrentScreen = Screen.currentResolution.width;
-//        }
+    //            Screen.SetResolution(width, height, true);
+    //            resolutionChangedEvent?.Invoke(width, height, true);
+    //        }
+    //        else if (!Screen.fullScreen && wasFullscreenLastFrame)
+    //        {
+    //            // 从全屏切换到检测到的窗口。设置上一个窗口的分辨率。
+    //            Screen.SetResolution(setWidth, setHeight, false);
+    //            resolutionChangedEvent?.Invoke(setWidth, setHeight, false);
+    //        }
+    //        else if (!Screen.fullScreen && setWidth != -1 && setHeight != -1 && (Screen.width != setWidth || Screen.height != setHeight))
+    //        {
+    //            //根据高度设置宽度，因为Aero Snap不会触发WM_SIZING。
+    //            setHeight = Screen.height;
+    //            setWidth = Mathf.RoundToInt(Screen.height * aspect);
 
-//        //保存下一帧的全屏状态
-//        wasFullscreenLastFrame = Screen.fullScreen;
+    //            Screen.SetResolution(setWidth, setHeight, Screen.fullScreen);
+    //            resolutionChangedEvent?.Invoke(setWidth, setHeight, Screen.fullScreen);
+    //        }
+    //        else if (!Screen.fullScreen)
+    //        {
+    //            // 保存当前屏幕的分辨率
+    //            // 下次切换到全屏时，此分辨率将被设置为窗口分辨率
+    //            // 只有高度，如果需要，宽度将根据高度和长宽比设置，以确保长宽比保持在全屏模式
+    //            pixelHeightOfCurrentScreen = Screen.currentResolution.height;
+    //            pixelWidthOfCurrentScreen = Screen.currentResolution.width;
+    //        }
 
-//        // 当游戏窗口调整大小时，在编辑器中触发分辨率改变事件。
-//#if UNITY_EDITOR
-//        if (Screen.width != setWidth || Screen.height != setHeight)
-//        {
-//            setWidth = Screen.width;
-//            setHeight = Screen.height;
-//            resolutionChangedEvent?.Invoke(setWidth, setHeight, Screen.fullScreen);
-//        }
-//#endif
-//    }
+    //        //保存下一帧的全屏状态
+    //        wasFullscreenLastFrame = Screen.fullScreen;
+
+    //        // 当游戏窗口调整大小时，在编辑器中触发分辨率改变事件。
+    //#if UNITY_EDITOR
+    //        if (Screen.width != setWidth || Screen.height != setHeight)
+    //        {
+    //            setWidth = Screen.width;
+    //            setHeight = Screen.height;
+    //            resolutionChangedEvent?.Invoke(setWidth, setHeight, Screen.fullScreen);
+    //        }
+    //#endif
+    //    }
 
     /// <summary>
     /// 调用SetWindowLong32或SetWindowLongPtr64，取决于可执行文件是32位还是64位。
@@ -570,6 +585,7 @@ public class ResolutionManager : MonoBehaviour
         // 重新设置旧的WindowProc回调,如果检测到WM_CLOSE,这将在新的回调本身中完成, 64位没问题，32位可能会造成闪退
 
         SetWindowLong(unityHWnd, GWLP_WNDPROC, oldWndProcPtr);
+        SetWindowLong(unityHWnd, GWL_STYLE, new IntPtr(GetWindowLong(unityHWnd, GWL_STYLE) | WS_MAXIMIZEBOX));
 
         yield return new WaitForEndOfFrame();
 
