@@ -8,6 +8,8 @@ public class Game : PresistableObject
 {
     const int saveVersion = 2;
 
+    public static Game Instance { get; private set; }
+
     [SerializeField]
     ShapeFactory factory;
 
@@ -31,8 +33,11 @@ public class Game : PresistableObject
     public int levelCount;
     int loadedLevelSceneIndex;
 
+    public SpawnZone SpawnZoneOfLevel { get; set; }
+
     private void Awake()
     {
+        Instance = this;
         objects = new List<Shape>();
     }
 
@@ -53,6 +58,11 @@ public class Game : PresistableObject
 #endif
 
         StartCoroutine(CreateScene(1));
+    }
+
+    private void OnEnable()
+    {
+        Instance = this;
     }
 
     // Update is called once per frame
@@ -126,7 +136,7 @@ public class Game : PresistableObject
     {
         Shape obj = factory.GetRandom();
         Transform trans = obj.transform;
-        trans.localPosition = Random.insideUnitSphere * 5f;
+        trans.localPosition = SpawnZoneOfLevel.SpawnPoint;
         trans.localRotation = Random.rotation;
         trans.localScale = Vector3.one * Random.Range(0f, 1f);
         objects.Add(obj);

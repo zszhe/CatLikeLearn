@@ -91,6 +91,10 @@
     <Compile Include="Assets\Scripts\Base\Graph\FrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\CustomGravity.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\ChangeNormal.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\SpawnZone.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\GameLevel.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\SpawnSphere.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\SpawnCube.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
