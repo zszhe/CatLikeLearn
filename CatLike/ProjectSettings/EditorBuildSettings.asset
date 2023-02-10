@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/ObjManager/MainScene.unity
     guid: f205f9d1135aad34695b854da58eb67f
+  - enabled: 1
+    path: Assets/Scenes/ObjManager/Level 1.unity
+    guid: d606d750d9a1125469a95dba0c038397
+  - enabled: 1
+    path: Assets/Scenes/ObjManager/Level 2.unity
+    guid: 663d8239318845341948c6a8ad53d0a3
   m_configObjects: {}

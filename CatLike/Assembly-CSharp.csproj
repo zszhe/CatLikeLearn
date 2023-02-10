@@ -69,10 +69,14 @@
     <Compile Include="Assets\Scripts\Move\Gravity\GravityPanel.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\FunctionLibrary.cs" />
     <Compile Include="Assets\Scripts\PhotoTest1.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\PresistableObject.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\GravitySource.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\GraphFunction.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\GameSaver.cs" />
     <Compile Include="Assets\Scripts\Base\ClockMove\ClockMove.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\ShapeFactory.cs" />
     <Compile Include="Assets\Scripts\PhotoTest.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\PresistableStorage.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\DrawGraph.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\GravityManager.cs" />
     <Compile Include="Assets\Scripts\ResolutionManager.cs" />
@@ -83,14 +87,10 @@
     <Compile Include="Assets\Scripts\Move\Gravity\GravityBox.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\GravitySphere.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\GraphEnum.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\Shape.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\FrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\CustomGravity.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\ChangeNormal.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\GameSaver.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\PresistableObject.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\PresistableStorage.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\Shape.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\ShapeFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -111,6 +111,7 @@
     <None Include="Assets\Resources\Shaders\Base\Graph\Point Surface.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
+    <None Include="Assets\Resources\Shaders\ObjManager\InstancedColors.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Mobile.shader" />

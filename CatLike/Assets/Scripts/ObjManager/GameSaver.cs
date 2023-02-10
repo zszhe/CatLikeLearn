@@ -46,10 +46,12 @@ namespace GameSaver
     public class GameDataReader
     {
         BinaryReader reader;
+        public int Version { get; }
 
-        public GameDataReader(BinaryReader reader)
+        public GameDataReader(BinaryReader reader, int version)
         {
             this.reader = reader;
+            this.Version = version;
         }
 
         public float ReadFloat()

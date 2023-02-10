@@ -14,10 +14,11 @@ namespace GameSaver
             savePath = Path.Combine(Application.persistentDataPath, "saveFile");
         }
 
-        public void Save(PresistableObject o)
+        public void Save(PresistableObject o, int version)
         {
             using (BinaryWriter writer = new BinaryWriter(File.Open(savePath, FileMode.Create)))
             {
+                writer.Write(-version);
                 o.Save(new GameDataWritter(writer));
             }
         }
@@ -26,7 +27,8 @@ namespace GameSaver
         {
             using (BinaryReader reader = new BinaryReader(File.Open(savePath, FileMode.Open)))
             {
-                o.Load(new GameDataReader(reader));
+                int version = -reader.ReadInt32();
+                o.Load(new GameDataReader(reader, version));
             }
         }
     } 
