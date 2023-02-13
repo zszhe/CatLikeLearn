@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameSaver
 {
-    public class Shape : PresistableObject
+    public class Shape : PersistableObject
     {
         MeshRenderer meshRenderer;
 

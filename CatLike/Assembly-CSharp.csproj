@@ -69,14 +69,14 @@
     <Compile Include="Assets\Scripts\Move\Gravity\GravityPanel.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\FunctionLibrary.cs" />
     <Compile Include="Assets\Scripts\PhotoTest1.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\PresistableObject.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\GameSaver\PersistableObject.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\GravitySource.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\GraphFunction.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\GameSaver.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\GameSaver\GameSaver.cs" />
     <Compile Include="Assets\Scripts\Base\ClockMove\ClockMove.cs" />
     <Compile Include="Assets\Scripts\ObjManager\ShapeFactory.cs" />
     <Compile Include="Assets\Scripts\PhotoTest.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\PresistableStorage.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\GameSaver\PersistableStorage.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\DrawGraph.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\GravityManager.cs" />
     <Compile Include="Assets\Scripts\ResolutionManager.cs" />
@@ -96,6 +96,7 @@
     <Compile Include="Assets\Scripts\ObjManager\SpawnSphere.cs" />
     <Compile Include="Assets\Scripts\ObjManager\SpawnCube.cs" />
     <Compile Include="Assets\Scripts\ObjManager\CompositeSpawnZone.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\RotatingObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

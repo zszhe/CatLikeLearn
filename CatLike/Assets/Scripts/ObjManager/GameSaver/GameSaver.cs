@@ -19,6 +19,16 @@ namespace GameSaver
             writer.Write(value);
         }
 
+        public void Write(float value)
+        {
+            writer.Write(value);
+        }
+
+        public void Write(Random.State value)
+        {
+            writer.Write(JsonUtility.ToJson(value));
+        }
+
         public void Write(Vector3 value)
         {
             writer.Write(value.x);
@@ -62,6 +72,11 @@ namespace GameSaver
         public int ReadInt()
         {
             return reader.ReadInt32();
+        }
+
+        public Random.State ReadRandomState()
+        {
+            return JsonUtility.FromJson<Random.State>(reader.ReadString());
         }
 
         public Vector3 ReadVector3()

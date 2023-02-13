@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace GameSaver 
 {
-    public class PresistableStorage : MonoBehaviour
+    public class PersistableStorage : MonoBehaviour
     {
         string savePath;
 
@@ -14,7 +14,7 @@ namespace GameSaver
             savePath = Path.Combine(Application.persistentDataPath, "saveFile");
         }
 
-        public void Save(PresistableObject o, int version)
+        public void Save(PersistableObject o, int version)
         {
             using (BinaryWriter writer = new BinaryWriter(File.Open(savePath, FileMode.Create)))
             {
@@ -23,13 +23,12 @@ namespace GameSaver
             }
         }
 
-        public void Load(PresistableObject o)
+        public void Load(PersistableObject o)
         {
-            using (BinaryReader reader = new BinaryReader(File.Open(savePath, FileMode.Open)))
-            {
-                int version = -reader.ReadInt32();
-                o.Load(new GameDataReader(reader, version));
-            }
+            byte[] data = File.ReadAllBytes(savePath);
+            var reader = new BinaryReader(new MemoryStream(data));
+            int version = -reader.ReadInt32();
+            o.Load(new GameDataReader(reader, version));
         }
     } 
 }

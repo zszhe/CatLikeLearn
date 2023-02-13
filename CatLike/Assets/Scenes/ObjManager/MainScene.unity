@@ -209,7 +209,8 @@ MonoBehaviour:
   saveKey: 115
   loadKey: 108
   destroyKey: 100
-  levelCount: 2
+  levelCount: 4
+  reseedOnLoad: 0
 --- !u!1 &277791189
 GameObject:
   m_ObjectHideFlags: 0

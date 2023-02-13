@@ -5,7 +5,7 @@ using UnityEngine;
 namespace GameSaver
 {
     [DisallowMultipleComponent]
-    public class PresistableObject : MonoBehaviour
+    public class PersistableObject : MonoBehaviour
     {
         public virtual void Save(GameDataWritter writer)
         {
