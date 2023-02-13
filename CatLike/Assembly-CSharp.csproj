@@ -95,6 +95,7 @@
     <Compile Include="Assets\Scripts\ObjManager\GameLevel.cs" />
     <Compile Include="Assets\Scripts\ObjManager\SpawnSphere.cs" />
     <Compile Include="Assets\Scripts\ObjManager\SpawnCube.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\CompositeSpawnZone.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
