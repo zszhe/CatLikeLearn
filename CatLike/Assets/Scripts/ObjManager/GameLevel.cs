@@ -30,6 +30,11 @@ public class GameLevel : PersistableObject
         }
     }
 
+    public void ConfigureSpawn(Shape shape)
+    {
+        spawnZone.ConfigureSpawn(shape);
+    }
+
     public override void Save(GameDataWritter writer)
     {
         writer.Write(persistableObjects.Length);

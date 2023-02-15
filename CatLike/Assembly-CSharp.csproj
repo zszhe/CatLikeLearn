@@ -59,6 +59,7 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio\2019\Professional\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ObjManager\CompositeSpawnZone.cs" />
     <Compile Include="Assets\Scripts\Move\OrbitCamera\OrbitCamera.cs" />
     <Compile Include="Assets\Scripts\CameraRotate.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\CustomRigidbody.cs" />
@@ -72,16 +73,22 @@
     <Compile Include="Assets\Scripts\ObjManager\GameSaver\PersistableObject.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\GravitySource.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\GraphFunction.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\SpawnZone.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\Utility.cs" />
     <Compile Include="Assets\Scripts\ObjManager\GameSaver\GameSaver.cs" />
     <Compile Include="Assets\Scripts\Base\ClockMove\ClockMove.cs" />
     <Compile Include="Assets\Scripts\ObjManager\ShapeFactory.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\SpawnSphere.cs" />
     <Compile Include="Assets\Scripts\PhotoTest.cs" />
     <Compile Include="Assets\Scripts\ObjManager\GameSaver\PersistableStorage.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\SpawnCube.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\RotatingObject.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\DrawGraph.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\GravityManager.cs" />
     <Compile Include="Assets\Scripts\ResolutionManager.cs" />
     <Compile Include="Assets\Scripts\Base\Graph\ScrollRolling.cs" />
     <Compile Include="Assets\Scripts\Move\SampleMove\MoveSphere.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\GameLevel.cs" />
     <Compile Include="Assets\Scripts\Parallel.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\GravityBox.cs" />
@@ -91,12 +98,7 @@
     <Compile Include="Assets\Scripts\Base\Graph\FrameRateCounter.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\CustomGravity.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\ChangeNormal.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\SpawnZone.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\GameLevel.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\SpawnSphere.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\SpawnCube.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\CompositeSpawnZone.cs" />
-    <Compile Include="Assets\Scripts\ObjManager\RotatingObject.cs" />
+    <Compile Include="Assets\Scripts\ObjManager\PropertyAttribute\FloatRangeSliderAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

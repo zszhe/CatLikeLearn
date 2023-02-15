@@ -1,0 +1,24 @@
+using UnityEditor;
+using UnityEngine;
+using Utility;
+
+[CustomPropertyDrawer(typeof(FloatRange))]
+public class FloatRangeDrawer : PropertyDrawer
+{
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+    {
+        int originalIndentLevel = EditorGUI.indentLevel;
+        float originalLabelWidth = EditorGUIUtility.labelWidth;
+        EditorGUI.BeginProperty(position, label, property);
+        position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+        EditorGUI.indentLevel = 1;
+        position.width = position.width / 2f;
+        EditorGUIUtility.labelWidth = position.width / 2f;
+        EditorGUI.PropertyField(position, property.FindPropertyRelative("min"));
+        position.x += position.width;
+        EditorGUI.PropertyField(position, property.FindPropertyRelative("max"));
+        EditorGUI.EndProperty();
+        EditorGUI.indentLevel = originalIndentLevel;
+        EditorGUIUtility.labelWidth = originalLabelWidth;
+    }
+}

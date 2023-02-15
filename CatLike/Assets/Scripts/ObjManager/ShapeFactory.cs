@@ -59,9 +59,7 @@ namespace GameSaver
         {
             int shapeId = Random.Range(0, shapes.Count);
             int matId = Random.Range(0, mats.Count);
-            Color randomColor = Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.25f, 1f, 1f, 1f);
             Shape shape = Get(shapeId, matId);
-            shape.SetColor(randomColor);
             return shape;
         }
 

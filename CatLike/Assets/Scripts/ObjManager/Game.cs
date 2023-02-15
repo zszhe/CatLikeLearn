@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class Game : PersistableObject
 {
-    const int saveVersion = 3;
+    const int saveVersion = 4;
 
     [SerializeField]
     ShapeFactory factory;
@@ -135,6 +135,11 @@ public class Game : PersistableObject
             destructionProgress -= 1f;
             DestroyShape();
         }
+
+        for(int i = 0; i < objects.Count; i++)
+        {
+            objects[i].GameUpdate();
+        }
     }
 
     private IEnumerator CreateScene(int sceneIndex)
@@ -153,12 +158,9 @@ public class Game : PersistableObject
 
     private void CreateShape()
     {
-        Shape obj = factory.GetRandom();
-        Transform trans = obj.transform;
-        trans.localPosition = SpawnPosOfLevel;
-        trans.localRotation = Random.rotation;
-        trans.localScale = Vector3.one * Random.Range(0f, 1f);
-        objects.Add(obj);
+        Shape shape = factory.GetRandom();
+        GameLevel.Current.ConfigureSpawn(shape);
+        objects.Add(shape);
     }
 
     private void DestroyShape()
