@@ -99,6 +99,7 @@
     <Compile Include="Assets\Scripts\Move\Gravity\CustomGravity.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\ChangeNormal.cs" />
     <Compile Include="Assets\Scripts\ObjManager\PropertyAttribute\FloatRangeSliderAttribute.cs" />
+    <Compile Include="Assets\Scripts\GUITest\TestGUILayout.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
