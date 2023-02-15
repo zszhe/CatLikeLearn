@@ -1,9 +1,9 @@
+using UnityEditor;
 using UnityEngine;
 
-public class TestGUILayout : MonoBehaviour
+public class TestEditorWindow : EditorWindow
 {
-    [SerializeField]
-    private Texture AreaTexture;
+    private static TestEditorWindow _window;
 
     private bool toggle;
 
@@ -29,31 +29,41 @@ public class TestGUILayout : MonoBehaviour
     [SerializeField]
     private Rect windowRect2 = new Rect(870, 30, 120, 50);
 
-    [SerializeField]
-    private GUIContent content;
+    [MenuItem("LearnEditor/CreateTestEditorWindow")]
+    private static void CreateWindow()
+    {
+        _window = GetWindow<TestEditorWindow>(false, "TutorialWindow", true);
+        _window.Show();
 
-    [SerializeField]
-    private GUIStyle style;
+        //第一个参数：bool utility
+        //为true创建一个Win窗口（Windows的标准窗口，无法停靠在Editor），
+        //为false创建一个Unity的浮动窗口（和Scene Game这些窗口一样可以停靠在Editor中）
 
-    [SerializeField]
-    private GUISkin skin;
+        //第二个参数： string title 窗口标题
+
+        //第三个参数：bool focus 创建后是否聚焦到这个窗口上
+    }
 
     private void OnGUI()
     {
+
+        Debug.Log("On Draw");
+        // 如果要实现动态检测，可以使用 Update 或者 OnInspectorUpdate 这两个Event方法
+
         heigth = 0;
         toggle = GUI.Toggle(new Rect(0, heigth, 150, 30), toggle, "是否展开Area");
         heigth += 30;
         if (toggle)
         {
-            GUILayout.BeginArea(new Rect(0, heigth, 300, 500), AreaTexture);
+            GUILayout.BeginArea(new Rect(0, heigth, 300, 500));
 
-            if(GUILayout.Button("测试按钮", GUILayout.Width(100), GUILayout.Height(25)))
+            if (GUILayout.Button("测试按钮", GUILayout.Width(100), GUILayout.Height(25)))
             {
                 Debug.Log("Click 按钮 ！");
             }
 
             nowSelectionIdx = GUILayout.SelectionGrid(nowSelectionIdx, buttonNames, maxButtonPerLine);
-            if(nowSelectionIdx != lastSelectionIdx)
+            if (nowSelectionIdx != lastSelectionIdx)
             {
                 Debug.Log("SelectionGrid 选择了：" + buttonNames[nowSelectionIdx]);
                 lastSelectionIdx = nowSelectionIdx;
@@ -61,13 +71,13 @@ public class TestGUILayout : MonoBehaviour
 
             nowToggleIdx = GUILayout.Toolbar(nowToggleIdx, buttonNames);
 
-            if(nowToggleIdx != lastToggleIdx)
+            if (nowToggleIdx != lastToggleIdx)
             {
                 Debug.Log("Toolbar 选择了：" + buttonNames[nowToggleIdx]);
                 lastToggleIdx = nowToggleIdx;
             }
 
-            GUILayout.Label("Hi 这是一个Label", style);
+            GUILayout.Label("Hi 这是一个Label");
             GUILayout.Box("但是Label太不明显了所以可以用Box代替", GUILayout.Width(280), GUILayout.Height(25));
             //使用GUILayout 下的 TextArea TextField
             //常需要结合 MinWidth Option 否则在输入字符过短时宽度可能收缩到无法使用
@@ -103,7 +113,7 @@ public class TestGUILayout : MonoBehaviour
 
             //一定记得上面Begin展开Area
             //下面就要End结束 ，不然会报错
-            GUILayout.BeginArea(new Rect(300, 30, 120, 500), AreaTexture);
+            GUILayout.BeginArea(new Rect(300, 30, 120, 500));
             GUILayout.BeginHorizontal();
 
             GUILayout.BeginVertical();
@@ -151,29 +161,17 @@ public class TestGUILayout : MonoBehaviour
             windowRect1 = GUILayout.Window(0, windowRect1, DoMyWindow, "My Window");
             windowRect2 = GUILayout.Window(1, windowRect2, DoMyWindow, "My Window", GUILayout.Width(100));
         }
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    // Make the contents of the window
-    void DoMyWindow(int windowID)
-    {
-        // This button is too large to fit the window
-        // Normally, the window would have been expanded to fit the button, but due to
-        // the GUILayout.Width call above the window will only ever be 100 pixels wide
-        if (GUILayout.Button("Please click me a lot"))
+        // Make the contents of the window
+        void DoMyWindow(int windowID)
         {
-            print("Got a click" + windowID);
+            // This button is too large to fit the window
+            // Normally, the window would have been expanded to fit the button, but due to
+            // the GUILayout.Width call above the window will only ever be 100 pixels wide
+            if (GUILayout.Button("Please click me a lot"))
+            {
+                Debug.Log("Got a click" + windowID);
+            }
         }
     }
 }
