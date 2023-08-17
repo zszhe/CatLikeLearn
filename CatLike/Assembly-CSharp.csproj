@@ -80,9 +80,11 @@
     <Compile Include="Assets\Scripts\ObjManager\Utility.cs" />
     <Compile Include="Assets\Scripts\ObjManager\GameSaver\GameSaver.cs" />
     <Compile Include="Assets\Scripts\Base\ClockMove\ClockMove.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\GameTileContentFactory.cs" />
     <Compile Include="Assets\Scripts\ObjManager\ShapeFactory.cs" />
     <Compile Include="Assets\Scripts\ObjManager\SpawnSphere.cs" />
     <Compile Include="Assets\Scripts\PhotoTest.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\GameTileContent.cs" />
     <Compile Include="Assets\Scripts\ObjManager\GameSaver\PersistableStorage.cs" />
     <Compile Include="Assets\Scripts\ObjManager\SpawnCube.cs" />
     <Compile Include="Assets\Scripts\ObjManager\RotatingObject.cs" />
@@ -107,7 +109,15 @@
     <Compile Include="Assets\Scripts\Move\Gravity\CustomGravity.cs" />
     <Compile Include="Assets\Scripts\Move\Gravity\ChangeNormal.cs" />
     <Compile Include="Assets\Scripts\EditorWindow\TestEditorWindow.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\TowerGame.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\GameTile.cs" />
     <Compile Include="Assets\Scripts\GUITest\TestGUILayout.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\GameBoard.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\GameObjectFactory.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\EnemyFactory.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\Enemy.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\EnemyCollection.cs" />
+    <Compile Include="Assets\Scripts\TowerDefense\DirectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
